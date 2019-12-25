@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.NoSuchElementException
 
-//@RestController
-//@RequestMapping("catalog/products")
+@RestController
+@RequestMapping("catalog/products")
 class ProductsController @Autowired constructor(private val productService: ProductService) {
 
     @PostMapping
@@ -30,7 +30,7 @@ class ProductsController @Autowired constructor(private val productService: Prod
                     @RequestParam(required = false, defaultValue = "0") page: Int,
                     @RequestParam(required = false, defaultValue = "10") size: Int): Array<ProductDTO> {
 
-        return if (!filterValue.isNullOrBlank() && !filterType.isNullOrBlank())
+        return if (!filterType.isNullOrBlank() && !filterValue.isNullOrBlank())
             productService.getProducts(filterType, filterValue, sortBy, page, size)
                     .map { it.toDTO() }
                     .toTypedArray()

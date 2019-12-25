@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
 import java.util.NoSuchElementException
 
-//@RestController
-//@RequestMapping("catalog/categories")
+@RestController
+@RequestMapping("catalog/categories")
 class CategoriesController @Autowired constructor(private val categoriesService: CategoriesService) {
 
     @PostMapping

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
 import java.util.NoSuchElementException
 
-//@RestController
-//@RequestMapping("catalog/categories")
+@RestController
+@RequestMapping("catalog/categories")
 class CatalogController @Autowired constructor(
         private val productService: ProductService,
         private val categoriesService: CategoriesService) {
