@@ -42,5 +42,5 @@ class ProductDaoImpl @Autowired constructor(val productCrud: ProductCrud) : Prod
             .findAllByPriceLessThanEqual(max, PageRequest.of(page, size, Sort.Direction.ASC, sortBy))
 
     override fun getProductByCategory(category: List<String>, sortBy: String, page: Int, size: Int) = productCrud
-            .findAllByCategoryIdIn(category, PageRequest.of(page, size, Sort.Direction.ASC, sortBy, sortBy))
+            .findAllByCategoryNameIn(category, PageRequest.of(page, size, Sort.Direction.ASC, sortBy, sortBy))
 }

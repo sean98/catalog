@@ -1,6 +1,5 @@
 package com.slt.cloudapp.catalogService.controllers.dto
 
-import com.slt.cloudapp.catalogService.dao.data.ProductEntity
 import com.slt.cloudapp.catalogService.services.data.Product
 
 data class ProductDTO(

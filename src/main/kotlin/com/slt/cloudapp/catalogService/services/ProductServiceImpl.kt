@@ -4,9 +4,10 @@ import com.slt.cloudapp.catalogService.dao.CategoriesDao
 import com.slt.cloudapp.catalogService.dao.ProductDao
 import com.slt.cloudapp.catalogService.dao.data.ProductEntity
 import com.slt.cloudapp.catalogService.services.data.Product
+import com.slt.cloudapp.catalogService.services.data.toProduct
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import javax.transaction.NotSupportedException
+import java.lang.UnsupportedOperationException
 import kotlin.reflect.full.memberProperties
 
 @Service
@@ -21,17 +22,12 @@ class ProductServiceImpl @Autowired constructor(
     }
 
     override fun addProduct(product: Product): Product {
-        val productEntity = productDao.addProduct(product.toEntity())
-        val categoryEntity = categoryDao.getCategory(productEntity.categoryId)
-                ?: throw NoSuchElementException("couldn't find matching category")
-        return Product(productEntity, categoryEntity)
+        return productDao.addProduct(product.toEntity()).toProduct()
     }
 
     override fun getProductById(id: String): Product {
-        val productEntity = productDao.getProductById(id) ?: throw NoSuchElementException("couldn't find element with id $id")
-        val categoryEntity = categoryDao.getCategory(productEntity.categoryId)
-                ?: throw NoSuchElementException("couldn't find matching category")
-        return Product(productEntity, categoryEntity)
+        return productDao.getProductById(id)?.toProduct()
+                ?: throw NoSuchElementException("couldn't find element with id $id")
     }
 
     override fun getProducts(sortBy: String, page: Int, size: Int): List<Product> {
@@ -41,8 +37,7 @@ class ProductServiceImpl @Autowired constructor(
 
         return productDao
                 .getProducts(sortBy, page, size)
-                .map { Product(it, categoryDao.getCategory(it.categoryId)
-                        ?: throw NoSuchElementException("couldn't find matching category")) }
+                .map { it.toProduct() }
     }
 
     private fun getCategorySubTree(name: String): List<String> {
@@ -62,8 +57,11 @@ class ProductServiceImpl @Autowired constructor(
             "byMinPrice" -> productDao.getProductByMinPrice(filterValue.toInt(), sortBy, page, size)
             "byMaxPrice" -> productDao.getProductByMaxPrice(filterValue.toInt(), sortBy, page, size)
             "byCategoryName" -> productDao.getProductByCategory(getCategorySubTree(filterValue), sortBy, page, size)
-            else -> throw NotSupportedException("filtering by $filterType is not supported")
-        }.map { Product(it, categoryDao.getCategory(it.categoryId)
-                ?: throw NoSuchElementException("couldn't find matching category")) }
+            else -> throw UnsupportedOperationException("filtering by $filterType is not supported")
+        }.map { it.toProduct() }
     }
+
+    private fun Product.toEntity() =
+            ProductEntity(id, name, price, image, categoryDao.getCategory(category.name)
+                    ?: throw NoSuchElementException("couldn't find matching category"))
 }

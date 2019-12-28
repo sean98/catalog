@@ -22,10 +22,9 @@ class CategoriesDaoImpl @Autowired constructor(val categoryCrud: CategoryCrud) :
     override fun getCategory(name: String): CategoryEntity? = categoryCrud.findById(name).orElse(null)
 
     override fun getCategories(sortBy: String, page: Int, size: Int): List<CategoryEntity> =
-            categoryCrud.findAll(PageRequest.of(page, size, Sort.Direction.DESC, sortBy)).content
+            categoryCrud.findAll(PageRequest.of(page, size, Sort.Direction.ASC, sortBy)).content
 
     override fun getByParentName(name: String) =
-            categoryCrud.getAllByParentCategoryLike(name)
-
+            categoryCrud.getAllByParentCategoryNameLike(name)
 
 }

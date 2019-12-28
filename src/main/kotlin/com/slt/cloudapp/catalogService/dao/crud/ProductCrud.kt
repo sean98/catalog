@@ -2,11 +2,11 @@ package com.slt.cloudapp.catalogService.dao.crud
 
 import com.slt.cloudapp.catalogService.dao.data.ProductEntity
 import org.springframework.data.domain.Pageable
+import org.springframework.data.neo4j.repository.Neo4jRepository
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.repository.query.Param
 
-interface ProductCrud: PagingAndSortingRepository<ProductEntity,String> {
-
+interface ProductCrud: Neo4jRepository<ProductEntity,String> {
 
     fun findAllByNameLike(@Param("name") name: String, pageable: Pageable): List<ProductEntity>
 
@@ -14,5 +14,6 @@ interface ProductCrud: PagingAndSortingRepository<ProductEntity,String> {
 
     fun findAllByPriceGreaterThanEqual(@Param("price") price: Int, pageable: Pageable): List<ProductEntity>
 
-    fun findAllByCategoryIdIn(@Param("id") id: List<String>, pageable: Pageable): List<ProductEntity>
+    fun findAllByCategoryNameIn(@Param("id") id: List<String>, pageable: Pageable): List<ProductEntity>
+
 }
